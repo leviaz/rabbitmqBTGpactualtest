@@ -1,6 +1,5 @@
 package com.btgpactualteste.ordemms.entity;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -13,26 +12,26 @@ import java.util.List;
 @Document(collection = "tb_orders")
 public class OrderEntity {
 
-    @MongoId(FieldType.OBJECT_ID)
-    private ObjectId orderId;
+    @MongoId
+    private Long orderId;
 
     @Indexed(name = "customer_id_index")
-    private Long customerId;
+    public Long customerId;
 
     @Field(targetType = FieldType.DECIMAL128)
     private BigDecimal total;
 
-    private List<OrderItem> itens;
+    private List<OrderItem> items;
 
     // Constructors, getters, and setters
     public OrderEntity() {
     }
 
-    public ObjectId getOrderId() {
+    public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(ObjectId orderId) {
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 
@@ -52,11 +51,11 @@ public class OrderEntity {
         this.total = total;
     }
 
-    public List<OrderItem> getItens() {
-        return itens;
+    public List<OrderItem> getItems() {
+        return items;
     }
 
-    public void setItens(List<OrderItem> itens) {
-        this.itens = itens;
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 }

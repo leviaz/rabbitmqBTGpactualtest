@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class OrderController {
     @Autowired
@@ -18,14 +20,17 @@ public class OrderController {
 
     //Pagination configs
     @GetMapping("/customers/{customerId}/orders")
-    public ResponseEntity<ApiResponse<OrderResponse> > listOrders(
-            @PathVariable("customerId") Long customerId,
-            @RequestParam(name = "page",defaultValue = "0") Integer page,
-            @RequestParam(name = "pageSize",defaultValue = "0") Integer pagesize){
+    public ResponseEntity<ApiResponse<OrderResponse>> listOrders(@PathVariable("customerId") Long customerId,
+                                                                 @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                                 @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize){
 
-        var pageResponse = orderService.findAllByCustomerId(customerId, PageRequest.of(page,pagesize));
-        System.out.println(pageResponse.getContent());
+
+        var pageResponse = orderService.findAllByCustomerId(customerId, PageRequest.of(page, pageSize));
+        //Sumarize the response
+        var totalOnOrders = orderService.findTotalByClient(customerId);
+
         return ResponseEntity.ok(new ApiResponse<>(
+                Map.of("totalOrders",totalOnOrders),
                 pageResponse.getContent(),
                 PaginationResponse.fromPage(pageResponse)
         ));
